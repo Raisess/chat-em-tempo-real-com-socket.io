@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<link rel="shortcut icon" href="https://lh3.googleusercontent.com/DnPTmUsQRlyWOQ5VvnaY2aaD5YSaB7A3y9l0Z5Bk91x01aaatmV9hciZsNpDqko_Phrx">
+	<title>Chatzin Boladão</title>
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/v4-shims.css" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.5/socket.io.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+	<style>
+		body{
+			margin: 0;
+			font-family: sans-serif;
+			background-color: #110b26;
+			color: #fff;
+		}
+		input{
+			font-size: 20px;
+			color: #fff;
+			border: solid 1px #fff;
+			background-color: transparent;
+			border-radius: 5px;
+			padding-left: 10px;
+		}
+		.app{
+			position: fixed;
+			width: 100%;
+			height: 100%;
+		}
+		.header{
+			z-index: 1;
+			position: fixed;
+			width: 100%;
+			height: 40px;
+			background-color: #381d82;
+			color: #fff;
+			display: flex;
+			box-shadow: 0 0 3px #000;
+		}
+		.item{
+			font-size: 30px;
+			margin-top: 5px;
+			margin-left: 10px;
+			cursor: pointer;
+		}
+		.main-container{
+			position: fixed;
+			width: 100%;
+			height: 90%;
+			margin-top: 40px;
+		}
+		.main-container *{
+			margin-left: 4.5%;
+		}
+		.msg{
+			position: fixed;
+			margin-top: 60px;
+			width: 90%;
+			height: 75%;
+			overflow: auto;
+			border: solid 1px #fff;
+			border-radius: 5px;
+		}
+		.msg p{
+			margin-left: 10px;
+			font-size: 20px;
+		}
+		.author{
+			position: fixed;
+			top: 50px;
+			width: 100%;
+			margin-left: 0;
+		}
+		.author input{
+			height: 30px;
+			width: 88.5%;
+		}
+		.content{
+			position: fixed;
+			bottom: 10px;
+			width: 95%;
+			display: flex;
+			margin-left: 3px;
+		}
+		.content input{
+			height: 30px;
+			width: 78.5%;
+			margin-top: 1px;
+		}
+		.content button{
+			margin-left: 7px;
+			width: 13%;
+			border: none;
+			font-size: 30px;
+			border-radius: 5px;
+			height: 35px;
+			background-color: #fff;
+			color: #222;
+		}
+		.content button:active{
+			background-color: #222;
+			color: #fff;	
+		}
+	</style>
+</head>
+<body>
+	<div class="app">
+		<div class="header">
+			<div class="item" id="rooms" onclick="alert('Sistema de salas em breve')">
+				<i class="fas fa-bars"></i>
+			</div>
+		</div>
+		<div class="main-container">
+			<div class="author">
+				<input type="text" id="authorInput" placeholder="nickname" />
+			</div>
+			<div class="msg" id="msgOutput"></div>
+			<div class="content">
+				<input type="text" id="msgInput" placeholder="mensagem" />
+				<button id="msgSubmit"><i class="fas fa-angle-right"></i></button>
+			</div>
+		</div>
+	</div>
+	<script>
+		$(document).ready(()=>{
+
+			const socket = io();
+
+			let color;
+
+			const sendMsg = (e)=>{
+				e.preventDefault();
+				
+				socket.emit('msg send', $('#authorInput').val()+': '+$('#msgInput').val());
+				$('#msgInput').val('');
+
+				return;
+
+			}
+			$('#msgSubmit').click((e)=>{
+				if($('#authorInput').val() == '' || $('#msgInput').val() == ''){
+					return alert('prencha os campos');
+				}
+				else if($('#authorInput').val() == 'danilo'){
+					color = 'orange';
+					sendMsg(e);
+				}
+				else{
+					color = '#fff';
+					sendMsg(e);
+				}
+			});
+
+			socket.on('msg send', (msg)=>{
+				$('#msgOutput').append(`<p style="color: ${color}">${msg}</p>`);
+			});
+
+		});
+	</script>
+</body>
+</html>
