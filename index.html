@@ -128,8 +128,6 @@
 
 			const socket = io();
 
-			let color;
-
 			const sendMsg = (e)=>{
 				e.preventDefault();
 				
@@ -143,18 +141,13 @@
 				if($('#authorInput').val() == '' || $('#msgInput').val() == ''){
 					return alert('prencha os campos');
 				}
-				else if($('#authorInput').val() == 'danilo'){
-					color = 'orange';
-					sendMsg(e);
-				}
 				else{
-					color = '#fff';
 					sendMsg(e);
 				}
 			});
 
 			socket.on('msg send', (msg)=>{
-				$('#msgOutput').append(`<p style="color: ${color}">${msg}</p>`);
+				$('#msgOutput').append(`<p>${msg}</p>`);
 			});
 
 		});
